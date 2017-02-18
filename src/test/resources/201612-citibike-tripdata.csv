@@ -1,0 +1,4 @@
+Trip Duration,Start Time,Stop Time,Start Station ID,Start Station Name,Start Station Latitude,Start Station Longitude,End Station ID,End Station Name,End Station Latitude,End Station Longitude,Bike ID,User Type,Birth Year,Gender
+528,2016-12-01 00:00:04,2016-12-01 00:08:52,499,Broadway & W 60 St,40.76915505,-73.98191841,228,E 48 St & 3 Ave,40.7546011026,-73.971878855,26931,Subscriber,1964,1
+1967,2016-12-01 00:01:52,2016-12-01 00:34:40,387,Centre St & Chambers St,40.71273266,-74.0046073,387,Centre St & Chambers St,40.71273266,-74.0046073,21348,Customer,,0
+160,2016-12-01 00:13:41,2016-12-01 00:16:21,504,1 Ave & E 16 St,40.73221853,-73.98165557,511,E 14 St & Avenue B,40.72938685,-73.97772429,27008,Subscriber,1995,2
