@@ -9,4 +9,8 @@ public class TripDataLoaderException extends RuntimeException {
     TripDataLoaderException(final String message) {
         super(message);
     }
+
+    TripDataLoaderException(final String message, final Throwable cause) {
+        super(message, cause);
+    }
 }

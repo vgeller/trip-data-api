@@ -113,13 +113,24 @@ public class TripParserTest {
     }
 
     @Test
-    public void invaidFile() throws URISyntaxException, IOException {
+    public void invalidFile() throws URISyntaxException, IOException {
         final File file = file("201601-invalid-file.csv");
         try (final TripParser parser = new TripParser(file)) {
             parser.iterator();
             fail("Expected TripDataLoaderException");
         } catch (final TripDataLoaderException e) {
             assertEquals("Unknown file format.  Headers: {foo=0, bar=1}", e.getMessage());
+        }
+    }
+
+    @Test
+    public void invalidFilename() throws URISyntaxException, IOException {
+        final File file = file("invalid_filename.csv");
+        try (final TripParser parser = new TripParser(file)) {
+            parser.iterator();
+            fail("Expected TripDataLoaderException");
+        } catch (final TripDataLoaderException e) {
+            assertEquals("Filename must start with YYYYMM, e.g. 201601", e.getMessage());
         }
     }
 
