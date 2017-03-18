@@ -8,5 +8,9 @@ public enum UserType {
     /**
      * Annual Member
      */
-    SUBSCRIBER
+    SUBSCRIBER,
+    /**
+     * Unknown user type
+     */
+    UNKNOWN
 }

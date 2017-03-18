@@ -3,12 +3,11 @@ package ninja.dock.tripdata;
 import ninja.dock.tripdata.model.Trip;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
-import org.apache.commons.lang3.StringUtils;
 
-import java.io.*;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
+import java.io.Closeable;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -30,20 +29,10 @@ public class TripParser implements Iterable<Trip>, Closeable {
         try {
             this.reader = new FileReader(file);
             this.parser = new CSVParser(reader, CSVFormat.EXCEL.withHeader());
-            final LocalDate period = toPeriod(file.getName());
             final FileFormat fileFormat = determineFileFormat(parser);
-            return new TripIterator(parser.iterator(), period, fileFormat);
+            return new TripIterator(parser.iterator(), fileFormat);
         } catch (final IOException e) {
             throw new TripDataLoaderException(e);
-        }
-    }
-
-    private LocalDate toPeriod(final String filename) {
-        final String dateStr = StringUtils.substring(filename, 0, 6) + "01";
-        try {
-            return LocalDate.parse(dateStr, DateTimeFormatter.BASIC_ISO_DATE);
-        } catch (final DateTimeParseException e) {
-            throw new TripDataLoaderException("Filename must start with YYYYMM, e.g. 201601", e);
         }
     }
 

@@ -5,11 +5,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import java.time.LocalDate;
-
 public class Trip {
 
-    private LocalDate period;
     private Integer durationSeconds;
     private String bikeId;
     private UserType userType;
@@ -17,14 +14,6 @@ public class Trip {
     private Integer birthYear;
     private TripEvent tripStart;
     private TripEvent tripEnd;
-
-    public LocalDate getPeriod() {
-        return period;
-    }
-
-    public void setPeriod(final LocalDate period) {
-        this.period = period;
-    }
 
     public Integer getDurationSeconds() {
         return durationSeconds;
@@ -95,7 +84,6 @@ public class Trip {
         final Trip trip = (Trip) o;
 
         return new EqualsBuilder()
-                .append(period, trip.period)
                 .append(durationSeconds, trip.durationSeconds)
                 .append(bikeId, trip.bikeId)
                 .append(userType, trip.userType)
@@ -109,7 +97,6 @@ public class Trip {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(period)
                 .append(durationSeconds)
                 .append(bikeId)
                 .append(userType)
@@ -123,7 +110,6 @@ public class Trip {
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
-                .append("period", period)
                 .append("durationSeconds", durationSeconds)
                 .append("bikeId", bikeId)
                 .append("userType", userType)

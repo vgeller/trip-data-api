@@ -7,22 +7,21 @@ import ninja.dock.tripdata.model.UserType;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.lang3.StringUtils;
 
-import java.time.LocalDate;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Iterator;
 
 public class TripIterator implements Iterator<Trip> {
 
     private final Iterator<CSVRecord> csvRecordIterator;
-    private final LocalDate period;
     private final FileFormat format;
+    private final DateParser dateParser;
 
     TripIterator(final Iterator<CSVRecord> csvRecordIterator,
-                        final LocalDate period,
                         final FileFormat format) {
         this.csvRecordIterator = csvRecordIterator;
-        this.period = period;
         this.format = format;
+        this.dateParser = new DateParser();
     }
 
     @Override
@@ -38,30 +37,50 @@ public class TripIterator implements Iterator<Trip> {
 
     private Trip toTrip(final CSVRecord record) {
         final TripEvent tripStart = new TripEvent();
-        tripStart.setStationId(record.get(FileField.START_STATION_ID.getFieldName(format)));
-        tripStart.setTimestamp(LocalDateTime.parse(record.get(FileField.START_TIME.getFieldName(format)),
-                format.getDateTimeFormatter()));
+        tripStart.setStationId(getString(record, FileField.START_STATION_ID));
+        tripStart.setTimestamp(getDate(record, FileField.START_TIME));
+        tripStart.setStationName(getString(record, FileField.START_STATION_NAME));
+        tripStart.setStationLatitude(getDecimal(record, FileField.START_STATION_LATITUDE));
+        tripStart.setStationLongitude(getDecimal(record, FileField.START_STATION_LONGITUDE));
 
         final TripEvent tripEnd = new TripEvent();
-        tripEnd.setStationId(record.get(FileField.END_STATION_ID.getFieldName(format)));
-        tripEnd.setTimestamp(LocalDateTime.parse(record.get(FileField.END_TIME.getFieldName(format)),
-                format.getDateTimeFormatter()));
+        tripEnd.setStationId(getString(record, FileField.END_STATION_ID));
+        tripEnd.setTimestamp(getDate(record, FileField.END_TIME));
+        tripEnd.setStationName(getString(record, FileField.END_STATION_NAME));
+        tripEnd.setStationLatitude(getDecimal(record, FileField.END_STATION_LATITUDE));
+        tripEnd.setStationLongitude(getDecimal(record, FileField.END_STATION_LONGITUDE));
 
         final Trip trip = new Trip();
-        trip.setPeriod(period);
         trip.setTripStart(tripStart);
         trip.setTripEnd(tripEnd);
-        trip.setDurationSeconds(parseInt(record.get(FileField.TRIP_DURATION.getFieldName(format))));
-        trip.setBirthYear(parseInt(record.get(FileField.BIRTH_YEAR.getFieldName(format))));
-        trip.setBikeId(record.get(FileField.BIKE_ID.getFieldName(format)));
-        trip.setUserType(toUserType(record.get(FileField.USER_TYPE.getFieldName(format))));
-        trip.setGender(toGender(record.get(FileField.GENDER.getFieldName(format))));
+        trip.setDurationSeconds(getInteger(record, FileField.TRIP_DURATION));
+        trip.setBirthYear(getInteger(record, FileField.BIRTH_YEAR));
+        trip.setBikeId(getString(record, FileField.BIKE_ID));
+        trip.setUserType(toUserType(getString(record, FileField.USER_TYPE)));
+        trip.setGender(toGender(getString(record, FileField.GENDER)));
 
         return trip;
     }
 
+    private String getString(final CSVRecord record, final FileField field) {
+        return record.get(field.getFieldName(format));
+    }
+
+    private Integer getInteger(final CSVRecord record, final FileField field) {
+        return parseInt(getString(record, field));
+    }
+
+    private LocalDateTime getDate(final CSVRecord record, final FileField field) {
+        final String s = getString(record, field);
+        return dateParser.parse(s);
+    }
+
+    private BigDecimal getDecimal(final CSVRecord record, final FileField field) {
+        return new BigDecimal(getString(record, field));
+    }
+
     private Integer parseInt(final String s) {
-        return StringUtils.isBlank(s) ? null : Integer.parseInt(s);
+        return StringUtils.isNumeric(s) ?  Integer.parseInt(s) : null;
     }
 
     private Gender toGender(final String s) {
@@ -82,7 +101,7 @@ public class TripIterator implements Iterator<Trip> {
         } else if ("Customer".equals(s)) {
             return UserType.CUSTOMER;
         } else {
-            throw new TripDataLoaderException("Unknown user type: " + s);
+            return UserType.UNKNOWN;
         }
     }
 }

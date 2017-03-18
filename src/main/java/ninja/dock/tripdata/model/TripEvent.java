@@ -5,19 +5,36 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class TripEvent {
 
     private String stationId;
+    private String stationName;
+    private BigDecimal stationLatitude;
+    private BigDecimal stationLongitude;
     private LocalDateTime timestamp;
 
     public TripEvent() {
         // default constructor
     }
 
-    public TripEvent(final String stationId, final LocalDateTime timestamp) {
+    public TripEvent(final String stationId,
+                     final LocalDateTime timestamp) {
         this.stationId = stationId;
+        this.timestamp = timestamp;
+    }
+
+    public TripEvent(final String stationId,
+                     final String stationName,
+                     final BigDecimal stationLatitude,
+                     final BigDecimal stationLongitude,
+                     final LocalDateTime timestamp) {
+        this.stationId = stationId;
+        this.stationName = stationName;
+        this.stationLatitude = stationLatitude;
+        this.stationLongitude = stationLongitude;
         this.timestamp = timestamp;
     }
 
@@ -37,6 +54,30 @@ public class TripEvent {
         this.timestamp = timestamp;
     }
 
+    public String getStationName() {
+        return stationName;
+    }
+
+    public void setStationName(final String stationName) {
+        this.stationName = stationName;
+    }
+
+    public BigDecimal getStationLatitude() {
+        return stationLatitude;
+    }
+
+    public void setStationLatitude(final BigDecimal stationLatitude) {
+        this.stationLatitude = stationLatitude;
+    }
+
+    public BigDecimal getStationLongitude() {
+        return stationLongitude;
+    }
+
+    public void setStationLongitude(final BigDecimal stationLongitude) {
+        this.stationLongitude = stationLongitude;
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {
@@ -51,6 +92,9 @@ public class TripEvent {
 
         return new EqualsBuilder()
                 .append(stationId, tripEvent.stationId)
+                .append(stationName, tripEvent.stationName)
+                .append(stationLatitude, tripEvent.stationLatitude)
+                .append(stationLongitude, tripEvent.stationLongitude)
                 .append(timestamp, tripEvent.timestamp)
                 .isEquals();
     }
@@ -59,6 +103,9 @@ public class TripEvent {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(stationId)
+                .append(stationName)
+                .append(stationLatitude)
+                .append(stationLongitude)
                 .append(timestamp)
                 .toHashCode();
     }
@@ -67,6 +114,9 @@ public class TripEvent {
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.NO_CLASS_NAME_STYLE)
                 .append("stationId", stationId)
+                .append("stationName", stationName)
+                .append("stationLatitude", stationLatitude)
+                .append("stationLongitude", stationLongitude)
                 .append("timestamp", timestamp)
                 .toString();
     }
